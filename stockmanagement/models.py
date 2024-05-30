@@ -11,13 +11,17 @@ class Fornecedor(models.Model):
 
 
 class Produto(models.Model):  
-    tb_fornecedores_for_codigo = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
-    pro_valor = models.FloatField()
-    pro_quantidade = models.IntegerField()
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    tamanho = models.CharField(max_length=10)
+    descricao = models.TextField(max_length=100)
+    cor = models.TextField(max_length=100)
+    quantidade = models.IntegerField(default=0)
+
 
     def __str__(self):
-        return f"Código: {self.id}, Valor: {self.pro_valor}, Quantidade: {self.pro_quantidade}"
-
+        return f"Descrição: {self.descricao}, Valor: {self.valor}, Quantidade: {self.quantidade}"
+    
 
 class Funcionario(models.Model): 
     fun_nome = models.CharField(max_length=45)
@@ -31,7 +35,7 @@ class Funcionario(models.Model):
 
 class Venda(models.Model): 
     ven_horario = models.DateTimeField()  
-    ven_valor_total = models.FloatField()
+    ven_valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     tb_funcionarios_fun_codigo = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
 
     def __str__(self):

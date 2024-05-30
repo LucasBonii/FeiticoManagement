@@ -1,0 +1,52 @@
+{% include "stock/partials/head.html" %}
+<div class="container">
+    {% include "stock/partials/sidebar.html" %}
+    <div class="form-container">
+        <h2>Adicionar Produto</h2>
+        <form method="post" action="{% url 'add_produto' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <input type="text" id="descricao" name="descricao" placeholder="Camisa Algodão" required>
+            </div>
+            <div class="form-group">
+                <label for="valor">Valor:</label>
+                <input type="numeric" id="valor" name="valor" placeholder="100.90" required>
+            </div>
+            <div class="form-group">
+                <label for="tamanho">Tamanho:</label>
+                <input type="text" id="tamanho" name="tamanho" placeholder="GG" required>
+            </div>
+            <div class="form-group">
+                <label for="cor">Cor:</label>
+                <input type="text" id="cor" name="cor" placeholder="Preta" required>
+            </div>
+            <div class="form-group">
+                <label for="fornecedor">ID do Fornecedor:</label>
+                <input type="numeric" id="fornecedor" name="fornecedor" placeholder="37211" required>
+            </div>
+            <button type="submit">Adicionar Produto</button>
+
+
+
+            {% if mensagem %}
+                {% if mensagem == "Erro Fornecedor" %}
+                <div class="error-message">
+                    <p>Esse fornecedor não existe</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Erro produto" %}
+                <div class="error-message">
+                    <p>Esse produto já existe</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Sucesso" %}
+                <div class="success-message">
+                    <p>Produto adicionado com sucesso</p>
+                </div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+</div>
+
