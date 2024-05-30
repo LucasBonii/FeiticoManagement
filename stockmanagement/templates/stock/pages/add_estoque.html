@@ -1,0 +1,53 @@
+{% include "stock/partials/head.html" %}
+<head>
+    <title>Adicionar Fornecedor - Feitiço</title>
+</head>
+<div class="container">
+    {% include "stock/partials/sidebar.html" %}
+    <div class="form-container">
+        {% if not selecionado %}
+        <h2>Selecionar Produto</h2>
+            <form method="post" action="{% url 'add_estoque' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_produto">ID do Produto:</label>
+                    <input type="text" id="id_produto" name="id_produto" placeholder="3892" required>
+                </div>
+               
+                <button type="submit">Selecionar Produto</button>
+                
+            </form>
+        {% else %}
+        <h2>Adicionar Estoque</h2>
+        <form method="post" action="{% url 'add_estoque' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <p><strong>Produto:</strong> {{ produto.descricao }}, {{ produto.fornecedor }} - {{ produto.tamanho }} - {{ produto.cor }} - Quantidade: {{ produto.quantidade }}</p>
+            </div>
+            <div class="form-group">
+                <label for="id_produto">ID do Produto:</label>
+                <input type="text" id="id_produto" name="id_produto" placeholder="3892" required>
+            </div>
+
+            <button type="submit">Adicionar Estoque</button>
+        </form>
+        {% endif %}
+        
+
+
+            {% if mensagem %}
+                {% if mensagem == "Erro" %}
+                <div class="error-message">
+                    <p>Esse fornecedor já existe</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Sucesso" %}
+                <div class="success-message">
+                    <p>Fornecedor adicionado com sucesso</p>
+                </div>
+                {% endif %}
+            {% endif %}
+    </div>
+</div>
+
