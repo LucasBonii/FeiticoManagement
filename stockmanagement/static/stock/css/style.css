@@ -1,0 +1,181 @@
+:root {
+    --color-primary: #269fe6;
+    --color-primary-hover: #2086c2;
+    --color-primary-dark: #13141f;
+    --color-primary-dark-hover: #212336;
+    --color-primary-light: #d4ecfa;
+    --color-primary-light-hover: #bdd8e7;
+
+    --color-white: #fff;
+    --color-black: #000;
+
+    --color-dark-text: #444;
+    --color-info-light: #cce5ff;
+    --color-debug-light: #cce5ff;
+    --color-success-light: #d4edda;
+    --color-alert-light: #fff3cd;
+    --color-warning-light: #fff3cd;
+    --color-error-light: #f8d7da;
+
+    --color-info-dark: #4d86c4;
+    --color-debug-dark: #4d86c4;
+    --color-success-dark: #4a9c5d;
+    --color-alert-dark: #927f40;
+    --color-warning-dark: #927f40;
+    --color-error-dark: #da525d;
+
+    --color-gray-0: #f9f9f9;
+    --color-gray-1: #e0e0e0;
+    --color-gray-2: #c7c7c7;
+    --color-gray-3: #aeaeae;
+    --color-gray-4: #959595;
+    --color-gray-5: #7d7d7d;
+    --color-gray-6: #646464;
+    --color-gray-7: #4b4b4b;
+    --color-gray-8: #323232;
+    --color-gray-9: #191919;
+
+    --font-primary: sans-serif;
+    --font-headings: 'Roboto Slab', serif;
+
+    --spacing-gutter-medium: 3rem;
+    --spacing-gutter-large: 4rem;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.6rem;
+    font-family: var(--font-primary);
+    background: var(--color-gray-1);
+    color: var(--color-dark-text);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-headings);
+}
+
+.container {
+    display: flex;
+    justify-content: space-between; /* Distribuir o espaço restante entre os itens */
+}
+
+.main-side-bar {
+    max-width: 20rem;
+    background: #1f252f;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: fit-content;
+    padding: 1rem 1rem;
+}
+
+.logo {
+    margin-top: 0.2rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 4rem;
+}
+.logo img{
+    width: 100%;
+    height: auto;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    color: var(--color-white);
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    transition: background 0.3s;
+}
+
+.nav-buttons a:hover {
+    background: var(--color-primary-dark-hover);
+}
+
+/* Adições para o formulário */
+.form-container {
+    width: 500px; /* Largura do formulário */
+    margin: auto auto;
+    padding: 1rem;
+}
+
+.form-container h2 {
+    margin-bottom: 20px; /* Espaçamento abaixo do título do formulário */
+    margin-left: 12rem;
+}
+
+.form-group {
+    margin-bottom: 20px; /* Espaçamento entre os campos do formulário */
+}
+
+.form-group label {
+    display: block; /* Colocando os rótulos em uma nova linha */
+}
+
+.form-group input {
+    width: 100%; /* Fazendo os campos de entrada ocuparem toda a largura */
+    padding: 10px; /* Espaçamento interno dos campos */
+    font-size: 1.6rem; /* Tamanho da fonte dos campos */
+    border: 1px solid #ccc; /* Borda dos campos */
+    border-radius: 5px; /* Arredondamento das bordas dos campos */
+}
+
+button {
+    display: block; /* Colocando o botão em uma nova linha */
+    width: 100%; /* Fazendo o botão ocupar toda a largura */
+    padding: 10px; /* Espaçamento interno do botão */
+    font-size: 1.6rem; /* Tamanho da fonte do botão */
+    border: none; /* Removendo a borda do botão */
+    background-color: #57449a; /* Cor de fundo do botão */
+    color: var(--color-white); /* Cor do texto do botão */
+    border-radius: 5px; /* Arredondamento das bordas do botão */
+    cursor: pointer; /* Mudando o cursor ao passar sobre o botão */
+    transition: background-color 0.3s; /* Adicionando uma transição suave */
+}
+
+button:hover {
+    background-color: var(--color-primary-dark); /* Mudando a cor de fundo ao passar sobre o botão */
+}
+
+.error-message {
+    color: #721c24; /* Cor do texto */
+    background-color: #f8d7da; /* Cor de fundo */
+    border: 1px solid #f5c6cb; /* Borda */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 5px; /* Arredondamento das bordas */
+    margin-bottom: 10px; /* Espaçamento abaixo da mensagem */
+    margin-top: 20px;
+}
+
+/* Estilos para mensagem de sucesso */
+.success-message {
+    color: #155724; /* Cor do texto */
+    background-color: #d4edda; /* Cor de fundo */
+    border: 1px solid #c3e6cb; /* Borda */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 5px; /* Arredondamento das bordas */
+    margin-bottom: 10px; /* Espaçamento abaixo da mensagem */
+    margin-top: 20px;
+}
+

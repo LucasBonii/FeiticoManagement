@@ -1,0 +1,32 @@
+{% include "stock/partials/head.html" %}
+<div class="container">
+    {% include "stock/partials/sidebar.html" %}
+    <div class="form-container">
+        <h2>Adicionar Fornecedor</h2>
+        <form method="post" action="{% url 'add_fornecedor' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="cnpj">CNPJ:</label>
+                <input type="text" id="cnpj" name="cnpj" placeholder="Apenas números" required>
+            </div>
+            <button type="submit">Adicionar Fornecedor</button>
+            {% if mensagem %}
+                {% if mensagem == "Erro" %}
+                <div class="error-message">
+                    <p>Esse fornecedor já existe</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Sucesso" %}
+                <div class="success-message">
+                    <p>Fornecedor adicionado com sucesso</p>
+                </div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+</div>
+
