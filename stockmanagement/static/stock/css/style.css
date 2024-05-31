@@ -179,3 +179,19 @@ button:hover {
     margin-top: 20px;
 }
 
+select {
+    padding: 10px; /* Adiciona um espaçamento interno */
+    font-size: 16px; /* Define o tamanho da fonte */
+    border: 1px solid #ccc; /* Adiciona uma borda cinza */
+    border-radius: 5px; /* Adiciona cantos arredondados */
+    background-color: var(--color-gray-0); /* Define a cor de fundo */
+    width: 100%; /* Define a largura do elemento */
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para quando o select está focado */
+select:focus {
+    outline: none; /* Remove o contorno ao focar */
+    border-color: #007bff; /* Muda a cor da borda ao focar */
+}
+

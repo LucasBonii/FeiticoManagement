@@ -1,6 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+
+class Cargo(models.Model):
+    cargo = models.CharField(max_length=11, unique=True)
+
+
+class Funcionario(models.Model):
+    cpf = models.CharField(max_length=11, unique=True)  
+    nome = models.CharField(max_length=100, blank=True)
+    telefone = models.CharField(max_length=20, blank=True)  
+    funcao = models.ForeignKey(Cargo, on_delete=models.PROTECT, blank=True) 
+    usuario = models.OneToOneField(User, max_length=200, null=True, blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nome
+    
 
 class Fornecedor(models.Model):
     cnpj = models.BigIntegerField(default=0)
@@ -18,19 +35,8 @@ class Produto(models.Model):
     cor = models.TextField(max_length=100)
     quantidade = models.IntegerField(default=0)
 
-
     def __str__(self):
-        return f"Descrição: {self.descricao}, Valor: {self.valor}, Quantidade: {self.quantidade}"
-    
-
-class Funcionario(models.Model): 
-    fun_nome = models.CharField(max_length=60)
-    fun_cpf = models.BigIntegerField()
-    fun_senha = models.CharField(max_length=45)
-    fun_funcao = models.CharField(max_length=45)
-
-    def __str__(self):
-        return self.fun_nome
+        return f"Descrição: {self.descricao}, Valor: {self.valor}, Quantidade: {self.quantidade}"   
 
 
 class Cliente(models.Model):

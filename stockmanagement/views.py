@@ -98,3 +98,39 @@ def add_cliente(request):
 
     context = {"mensagem": mensagem}
     return render(request, 'stock/pages/add_cliente.html', context)
+
+
+def add_funcionario(request):
+    mensagem = None
+    cargos = Cargo.objects.all()
+
+    if request.method == "POST":
+        dados = request.POST.dict()
+        if "cpf" in dados and "senha" in dados and "nome" in dados and "cargo" in dados and "telefone" in dados:
+            cpf = dados.get("cpf")
+            senha = dados.get("senha")
+            id_cargo = dados.get("cargo")
+            telefone = dados.get("telefone")
+            nome = dados.get("nome")
+       
+            usuario, criado = User.objects.get_or_create(username=cpf)
+            if criado:
+                usuario.set_password(senha)
+                usuario.save()
+                cargo = Cargo.objects.get(id=id_cargo)
+                funcionario = Funcionario.objects.create(
+                    cpf=cpf,
+                    nome=nome,
+                    telefone=telefone,
+                    funcao=cargo,
+                    usuario=usuario
+                )
+                mensagem = "Sucesso"
+            else:
+                mensagem = "Erro"
+
+        else:
+            mensagem = "Erro Informaçoes"
+
+    context = {"mensagem": mensagem, "cargos": cargos}
+    return render(request, 'stock/pages/add_funcionario.html', context)
