@@ -53,15 +53,30 @@ def add_estoque(request, id_produto=None):
     mensagem = None
     selecionado = False
     produto_selecionado = None
-    
-    if id_produto:  # Se o ID do produto estiver presente na URL
-        selecionado = True
-        produto_selecionado = Produto.objects.filter(id=id_produto).first()
 
-    if request.method == "POST":  # Se o formulário for preenchido
+    if id_produto:  # Se o ID do produto estiver presente na URL
+        produto_selecionado = Produto.objects.filter(id=id_produto).first()
+        quantidade = request.POST.get("quantidade")
+        print(quantidade)
+        if quantidade:
+            try:
+                quantidade = int(quantidade)
+                if produto_selecionado:
+                    produto_selecionado.quantidade += quantidade
+                    produto_selecionado.save()
+                    quantidade = 0
+                    mensagem = "sucesso"
+                    return redirect('add_estoque', id_produto=id_produto)
+                    
+            except ValueError:
+                mensagem = "número"
+        selecionado = True
+
+    if request.method == "POST" and not id_produto:  # Se o formulário for preenchido e id_produto não está na URL
         id_produto = request.POST.get("id_produto")
         if id_produto:
             return redirect('add_estoque', id_produto=id_produto)
-    
+
     context = {"mensagem": mensagem, "selecionado": selecionado, "produto": produto_selecionado}
     return render(request, 'stock/pages/add_estoque.html', context)
+

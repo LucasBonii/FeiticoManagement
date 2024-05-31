@@ -20,14 +20,14 @@
             </form>
         {% else %}
         <h2>Adicionar Estoque</h2>
-        <form method="post" action="{% url 'add_estoque' %}">
+        <form method="post" action="{% url 'add_estoque' produto.id %}">
             {% csrf_token %}
             <div class="form-group">
-                <p><strong>Produto:</strong> {{ produto.descricao }}, {{ produto.fornecedor }} - {{ produto.tamanho }} - {{ produto.cor }} - Quantidade: {{ produto.quantidade }}</p>
+                <p><strong>Produto:</strong> {{ produto.descricao }}, {{ produto.fornecedor }} - {{ produto.cor }} - {{ produto.tamanho }} | Quantidade: {{ produto.quantidade }}</p>
             </div>
             <div class="form-group">
-                <label for="id_produto">ID do Produto:</label>
-                <input type="text" id="id_produto" name="id_produto" placeholder="3892" required>
+                <label for="quantidade">Quantidade:</label>
+                <input type="numeric" id="quantidade" name="quantidade" placeholder="64" required>
             </div>
 
             <button type="submit">Adicionar Estoque</button>
