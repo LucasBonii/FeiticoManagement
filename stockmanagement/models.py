@@ -24,13 +24,19 @@ class Produto(models.Model):
     
 
 class Funcionario(models.Model): 
-    fun_nome = models.CharField(max_length=45)
-    fun_cpf = models.CharField(max_length=45)
+    fun_nome = models.CharField(max_length=60)
+    fun_cpf = models.BigIntegerField()
     fun_senha = models.CharField(max_length=45)
     fun_funcao = models.CharField(max_length=45)
 
     def __str__(self):
         return self.fun_nome
+
+
+class Cliente(models.Model):
+    cli_nome = models.CharField(max_length=60)
+    cli_cpf = models.BigIntegerField()
+    cli_telefone = models.BigIntegerField()
 
 
 class Venda(models.Model): 

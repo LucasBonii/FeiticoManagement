@@ -80,3 +80,21 @@ def add_estoque(request, id_produto=None):
     context = {"mensagem": mensagem, "selecionado": selecionado, "produto": produto_selecionado}
     return render(request, 'stock/pages/add_estoque.html', context)
 
+
+def add_cliente(request):
+    mensagem = None
+    if request.method == "POST":
+        dados = request.POST.dict()
+        nome = dados.get("nome")
+        cpf = dados.get("cpf")
+        telefone = dados.get("telefone")
+
+        cliente = Cliente.objects.filter(cli_cpf=cpf).first()
+        if cliente:
+            mensagem = "Erro"
+        else:
+            cliente = Cliente.objects.create(cli_nome=nome, cli_cpf=cpf, cli_telefone=telefone)
+            mensagem = "Sucesso"
+
+    context = {"mensagem": mensagem}
+    return render(request, 'stock/pages/add_cliente.html', context)
