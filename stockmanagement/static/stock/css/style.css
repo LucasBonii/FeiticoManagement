@@ -160,11 +160,13 @@ button {
     border-radius: 5px; /* Arredondamento das bordas do botão */
     cursor: pointer; /* Mudando o cursor ao passar sobre o botão */
     transition: background-color 0.3s; /* Adicionando uma transição suave */
+    margin-bottom: 15px;
 }
 
 button:hover {
     background-color: var(--color-primary-dark); /* Mudando a cor de fundo ao passar sobre o botão */
 }
+
 
 .error-message {
     color: #721c24; /* Cor do texto */

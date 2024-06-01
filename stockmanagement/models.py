@@ -13,7 +13,7 @@ class Funcionario(models.Model):
     nome = models.CharField(max_length=100, blank=True)
     telefone = models.CharField(max_length=20, blank=True)  
     funcao = models.ForeignKey(Cargo, on_delete=models.SET_NULL, null=True, blank=True) 
-    usuario = models.OneToOneField(User, max_length=200, null=True, blank=True, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(User, max_length=200, null=True, blank=True, on_delete=models.CASCADE, related_name='funcionario')
     ativo = models.BooleanField(default=True)
 
     def __str__(self):
@@ -41,25 +41,28 @@ class Produto(models.Model):
 
 
 class Cliente(models.Model):
-    cli_nome = models.CharField(max_length=60)
-    cli_cpf = models.BigIntegerField()
-    cli_telefone = models.BigIntegerField()
+    nome = models.CharField(max_length=60)
+    cpf = models.BigIntegerField()
+    telefone = models.BigIntegerField()
 
 
 class Venda(models.Model): 
-    horario = models.DateTimeField()  
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
-    funcionario = models.ForeignKey(Funcionario, on_delete=models.PROTECT)
+    horario = models.DateTimeField(blank=True, null=True)  
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    funcionario = models.ForeignKey(Funcionario, blank=True, on_delete=models.PROTECT)
+    finalizada = models.BooleanField(default=False, blank=True)
+    cliente = models.ForeignKey(Cliente, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"Código: {self.id}, Horário: {self.horario}, Valor Total: {self.valor_total}"
 
 
-class Item(models.Model):
-    tb_produtos_pro_codigo = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    ite_quantidade = models.IntegerField()
-    ite_valor_parcial = models.FloatField()
-    tb_vendas_ven_codigo = models.ForeignKey(Venda, on_delete=models.CASCADE)
+class ItensPedido(models.Model):
+    produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.CASCADE)
+    quantidade = models.IntegerField(default=0)
+    pedido =  models.ForeignKey(Venda, null=True, blank=True, on_delete=models.CASCADE)
+    preco_parcial = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
 
-    def __str__(self):
-        return f"Código: {self.id}, Quantidade: {self.ite_quantidade}, Valor Parcela: {self.ite_valor_parcela}"
+    def __str__(self) -> str:
+        return f"Id: {self.id} - Produto: {self.produto.descricao}, {self.produto.tamanho}, {self.produto.cor}"
+

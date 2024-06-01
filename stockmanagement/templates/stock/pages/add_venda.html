@@ -1,0 +1,61 @@
+{% include "stock/partials/head.html" %}
+<head>
+    <title>Adicionar Venda - Feitiço</title>
+</head>
+<div class="container">
+    {% include "stock/partials/sidebar.html" %}
+    <div class="form-container">
+        <h2>Adicionar Venda</h2>
+        <form method="post" action="{% url 'add_venda' %}">
+            {% csrf_token %}
+            {% if not cliente %}
+                <div class="form-group">
+                    <label for="cliente">CPF do Cliente:</label>
+                    <input type="text" id="cliente" name="cliente" placeholder="João Pedro" >
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <p><strong>Cliente:</strong> {{ cliente.nome }} - <strong>Total:</strong> R${{ venda.valor_total }} </p>
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="codigo">Código do Produto:</label>
+                <input type="text" id="codigo" name="codigo" placeholder="1223" >
+            </div>
+            <div class="form-group">
+                <label for="quantidade">Quantidade:</label>
+                <input type="text" id="quantidade" name="quantidade" placeholder="3" >
+            </div>
+
+            {% for item in itens %}
+                <div class="form-group">
+                    <p><strong>Produto:</strong> {{ item.produto.descricao }}, {{ item.produto.fornecedor }} - {{ item.produto.cor }} - {{ item.produto.tamanho }} | Quantidade: {{ item.quantidade }}</p>
+                </div>
+            {% endfor %}
+
+            {% if not cliente %}
+                <button type="submit">Adicionar Cliente/Produto</button>
+            {% endif %}
+            <button type="submit">Adicionar Produto</button>
+            <a href="{% url 'finalizar_venda' %}" style="text-decoration: none;"><button type="button">Finalizar Venda</button></a>
+            <a href="{% url 'cancelar_venda' %}" style="text-decoration: none;"><button type="button">Cancelar Venda</button></a>
+            
+
+
+
+            {% if mensagem %}
+                {% if mensagem == "Erro" %}
+                <div class="error-message">
+                    <p>Esse fornecedor já existe</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Sucesso" %}
+                <div class="success-message">
+                    <p>Fornecedor adicionado com sucesso</p>
+                </div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+</div>
+

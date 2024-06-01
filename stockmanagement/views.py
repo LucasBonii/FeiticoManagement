@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from .models import *
+from datetime import datetime
+from .utils import *
 
 # Create your views here.
 
@@ -166,6 +168,60 @@ def fazer_login(request):
 
     context = {"mensagem": mensagem}
     return render(request, 'stock/pages/fazer_login.html', context)
+
+@login_required
+def add_venda(request):
+    itens_venda = None
+    vendedor = request.user.funcionario
+    venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
+    venda.valor_total = calcular_preco_total(venda)
+    itens_venda = ItensPedido.objects.filter(pedido=venda)
+    cliente = venda.cliente
+    if request.method == "POST":
+        dados = request.POST.dict()
+        quantidade = dados.get("quantidade")
+        codigo = dados.get("codigo")
+        if codigo and quantidade:
+            
+            produto = Produto.objects.get(id=codigo)
+            if produto:
+                item_pedido, criado = ItensPedido.objects.get_or_create(produto=produto, pedido=venda)
+                quantidade = int(quantidade)
+                if produto.quantidade >= (item_pedido.quantidade + quantidade):
+                    item_pedido.quantidade += quantidade
+                    item_pedido.preco_parcial = calcular_preco_parcial(item_pedido)
+                    item_pedido.save()
+                    return redirect('add_venda')
+
+                
+        cpf_cliente = dados.get("cliente")
+        if cpf_cliente:
+            cliente = Cliente.objects.get(cpf=cpf_cliente)
+            if cliente:
+                venda.cliente = cliente
+                venda.save()
+            #venda.valor_total = 
+
+    context = {"itens":itens_venda, "cliente": cliente, "venda": venda}
+    return render(request, 'stock/pages/add_venda.html', context)
+    
+
+def finalizar_venda(request):
+    vendedor = request.user.funcionario
+    venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
+    verificado = verificar_quantidades(venda)
+    if verificado:
+        venda.finalizada = True
+        venda.horario = datetime.now()
+        venda.save()
+    return redirect('add_venda')
+
+
+def cancelar_venda(request):
+    vendedor = request.user.funcionario
+    venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
+    venda.delete()
+    return redirect('add_venda')
 
 @login_required
 def fazer_logout(request):
