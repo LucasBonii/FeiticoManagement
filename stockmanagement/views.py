@@ -97,11 +97,11 @@ def add_cliente(request):
         cpf = dados.get("cpf")
         telefone = dados.get("telefone")
 
-        cliente = Cliente.objects.filter(cli_cpf=cpf).first()
+        cliente = Cliente.objects.filter(cpf=cpf).first()
         if cliente:
             mensagem = "Erro"
         else:
-            cliente = Cliente.objects.create(cli_nome=nome, cli_cpf=cpf, cli_telefone=telefone)
+            cliente = Cliente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
             mensagem = "Sucesso"
 
     context = {"mensagem": mensagem}
@@ -181,12 +181,19 @@ def add_venda(request):
         dados = request.POST.dict()
         quantidade = dados.get("quantidade")
         codigo = dados.get("codigo")
+        cpf_cliente = dados.get("cliente")
         if codigo and quantidade:
-            
+            if cpf_cliente:
+                cliente = Cliente.objects.get(cpf=cpf_cliente)
+                if cliente:
+                    venda.cliente = cliente
+                    venda.save()
+
+            quantidade = int(quantidade)
             produto = Produto.objects.get(id=codigo)
-            if produto:
+            if produto and produto.quantidade >= quantidade:
                 item_pedido, criado = ItensPedido.objects.get_or_create(produto=produto, pedido=venda)
-                quantidade = int(quantidade)
+                
                 if produto.quantidade >= (item_pedido.quantidade + quantidade):
                     item_pedido.quantidade += quantidade
                     item_pedido.preco_parcial = calcular_preco_parcial(item_pedido)
@@ -211,6 +218,7 @@ def finalizar_venda(request):
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
     verificado = verificar_quantidades(venda)
     if verificado:
+        diminuir_estoque(venda)
         venda.finalizada = True
         venda.horario = datetime.now()
         venda.save()

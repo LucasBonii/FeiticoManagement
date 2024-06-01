@@ -20,3 +20,10 @@ def verificar_quantidades(venda):
         if item.quantidade > item.produto.quantidade:
             return False
     return True
+
+def diminuir_estoque(venda):
+    itens_pedido = ItensPedido.objects.filter(pedido=venda)
+    for item in itens_pedido:
+        item.produto.quantidade -= item.quantidade
+        item.save()
+        item.produto.save()
