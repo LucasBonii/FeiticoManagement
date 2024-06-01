@@ -1,0 +1,7 @@
+{% include "stock/partials/head.html" %}
+
+<select class="form-group" name="cargo">
+    {% for cargo in cargos %}
+        <option value="{{ cargo.id }}">{{ cargo.cargo }}</option>
+    {% endfor %}
+</select>

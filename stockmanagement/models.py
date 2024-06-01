@@ -1,6 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+
+class Cargo(models.Model):
+    cargo = models.CharField(max_length=11, unique=True)
+
+
+class Funcionario(models.Model):
+    cpf = models.CharField(max_length=11, unique=True)  
+    nome = models.CharField(max_length=100, blank=True)
+    telefone = models.CharField(max_length=20, blank=True)  
+    funcao = models.ForeignKey(Cargo, on_delete=models.SET_NULL, null=True, blank=True) 
+    usuario = models.OneToOneField(User, max_length=200, null=True, blank=True, on_delete=models.CASCADE)
+    ativo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nome
+    
 
 class Fornecedor(models.Model):
     cnpj = models.BigIntegerField(default=0)
@@ -11,31 +29,30 @@ class Fornecedor(models.Model):
 
 
 class Produto(models.Model):  
-    tb_fornecedores_for_codigo = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
-    pro_valor = models.FloatField()
-    pro_quantidade = models.IntegerField()
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    tamanho = models.CharField(max_length=10)
+    descricao = models.TextField(max_length=100)
+    cor = models.TextField(max_length=100)
+    quantidade = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Código: {self.id}, Valor: {self.pro_valor}, Quantidade: {self.pro_quantidade}"
+        return f"Descrição: {self.descricao}, Valor: {self.valor}, Quantidade: {self.quantidade}"   
 
 
-class Funcionario(models.Model): 
-    fun_nome = models.CharField(max_length=45)
-    fun_cpf = models.CharField(max_length=45)
-    fun_senha = models.CharField(max_length=45)
-    fun_funcao = models.CharField(max_length=45)
-
-    def __str__(self):
-        return self.fun_nome
+class Cliente(models.Model):
+    cli_nome = models.CharField(max_length=60)
+    cli_cpf = models.BigIntegerField()
+    cli_telefone = models.BigIntegerField()
 
 
 class Venda(models.Model): 
-    ven_horario = models.DateTimeField()  
-    ven_valor_total = models.FloatField()
-    tb_funcionarios_fun_codigo = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    horario = models.DateTimeField()  
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f"Código: {self.id}, Horário: {self.ven_horario}, Valor Total: {self.ven_valor_total}"
+        return f"Código: {self.id}, Horário: {self.horario}, Valor Total: {self.valor_total}"
 
 
 class Item(models.Model):

@@ -35,6 +35,8 @@
     --color-gray-8: #323232;
     --color-gray-9: #191919;
 
+    --color-purple: #57449a;
+
     --font-primary: sans-serif;
     --font-headings: 'Roboto Slab', serif;
 
@@ -82,6 +84,12 @@ h4 {
     padding: 1rem 1rem;
 }
 
+.nav-buttons .logout {
+    position: absolute;
+    bottom: 10px; /* ou qualquer outra distância do fundo que desejar */
+   
+}
+
 .logo {
     margin-top: 0.2rem;
     margin-bottom: 1rem;
@@ -103,7 +111,7 @@ h4 {
     text-decoration: none;
     color: var(--color-white);
     padding: 1rem;
-    text-align: center;
+    text-align: Left;
     margin-bottom: 1rem;
     border-radius: 0.5rem;
     transition: background 0.3s;
@@ -122,7 +130,7 @@ h4 {
 
 .form-container h2 {
     margin-bottom: 20px; /* Espaçamento abaixo do título do formulário */
-    margin-left: 12rem;
+    margin-left: 13.2rem;
 }
 
 .form-group {
@@ -179,3 +187,66 @@ button:hover {
     margin-top: 20px;
 }
 
+select {
+    padding: 10px; /* Adiciona um espaçamento interno */
+    font-size: 16px; /* Define o tamanho da fonte */
+    border: 1px solid #ccc; /* Adiciona uma borda cinza */
+    border-radius: 5px; /* Adiciona cantos arredondados */
+    background-color: var(--color-gray-0); /* Define a cor de fundo */
+    width: 100%; /* Define a largura do elemento */
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para quando o select está focado */
+select:focus {
+    outline: none; /* Remove o contorno ao focar */
+    border-color: #007bff; /* Muda a cor da borda ao focar */
+}
+
+.login-container {
+    max-width: 144rem; /* Largura do formulário */
+    margin: auto auto;
+    padding: 1rem;
+}
+
+.login-container h2 {
+    margin-bottom: 20px; /* Espaçamento abaixo do título do formulário */
+    margin-left: 13.2rem;
+    text-align: center;
+}
+
+.login-group {
+    margin-bottom: 2.3rem; /* Espaçamento entre os campos do loginulário */
+    width: 50rem;
+    align-items: center;
+}
+
+.login-group label {
+    display: block; /* Colocando os rótulos em uma nova linha */
+}
+
+.login-group input {
+    width: 100%; /* Fazendo os campos de entrada ocuparem toda a largura */
+    padding: 10px; /* Espaçamento interno dos campos */
+    font-size: 1.6rem; /* Tamanho da fonte dos campos */
+    border: 1px solid #ccc; /* Borda dos campos */
+    border-radius: 5px; /* Arredondamento das bordas dos campos */
+}
+
+.logo-login {
+    margin-top: 6rem;
+    margin-bottom: 0rem;
+    width: 100%;
+    max-width: 10rem;
+    align-items: center;
+}
+.logo-login img{
+    width: 100%;
+    height: auto;
+}
+
+.texto-login {
+    text-align: center; /* Centralizar o texto */
+    margin-bottom: 0; /* Remover a margem inferior padrão */
+
+}
