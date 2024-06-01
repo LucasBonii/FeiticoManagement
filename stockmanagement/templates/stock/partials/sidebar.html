@@ -4,10 +4,12 @@
         <img src="{% static 'stock/images/caldeirao.png' %}" alt="Feitico">
     </div>
     <div class="nav-buttons">
-        <a href="#">Adicionar Venda</a>
-        <a href="{% url 'add_estoque' %}">Adicionar Estoque</a>
-        <a href="{% url 'add_fornecedor' %}">Adicionar Fornecedor</a>
-        <a href="{% url 'add_cliente' %}">Adicionar Cliente</a>
-        <a href="{% url 'add_produto' %}">Adicionar Produto</a>
+        <a href="#"><i class="fa-solid fa-dollar-sign"></i>  Venda</a>
+        <a href="{% url 'add_estoque' %}"><i class="fa-solid fa-boxes-stacked"></i>  Estoque</a>
+        <a href="{% url 'add_fornecedor' %}"><i class="fa-solid fa-truck"></i>  Fornecedor</a>
+        <a href="{% url 'add_cliente' %}"><i class="fa-regular fa-face-smile"></i>  Cliente</a>
+        <a href="{% url 'add_produto' %}"><i class="fa-solid fa-shirt"></i>  Produto</a>
+        <a href="{% url 'add_funcionario' %}"><i class="fa-solid fa-users"></i> Funcionário</a>
+        <a href="{% url 'fazer_logout' %}" class="logout">Sair <i class="fa-solid fa-arrow-right-from-bracket"></i> </a>
     </div>
 </div>

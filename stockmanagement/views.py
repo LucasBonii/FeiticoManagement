@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout, authenticate
 from .models import *
 
 # Create your views here.
@@ -7,6 +9,7 @@ def home(request):
     return render(request, 'stock/pages/home.html')
 
 
+@login_required
 def add_fornecedor(request):
     mensagem = None
     if request.method == "POST":            #Se o formulário for preenchido
@@ -24,6 +27,7 @@ def add_fornecedor(request):
     return render(request, 'stock/pages/add_fornecedor.html', context)
 
 
+@login_required
 def add_produto(request):
     mensagem = None
     if request.method == "POST":            #Se o formulário for preenchido
@@ -49,6 +53,7 @@ def add_produto(request):
     return render(request, 'stock/pages/add_produto.html', context)
 
 
+@login_required
 def add_estoque(request, id_produto=None):
     mensagem = None
     selecionado = False
@@ -81,6 +86,7 @@ def add_estoque(request, id_produto=None):
     return render(request, 'stock/pages/add_estoque.html', context)
 
 
+@login_required
 def add_cliente(request):
     mensagem = None
     if request.method == "POST":
@@ -100,6 +106,7 @@ def add_cliente(request):
     return render(request, 'stock/pages/add_cliente.html', context)
 
 
+@login_required
 def add_funcionario(request):
     mensagem = None
     cargos = Cargo.objects.all()
@@ -134,3 +141,33 @@ def add_funcionario(request):
 
     context = {"mensagem": mensagem, "cargos": cargos}
     return render(request, 'stock/pages/add_funcionario.html', context)
+
+
+def fazer_login(request):
+    mensagem = None
+    if request.user.is_authenticated:
+        print(request.user)
+        return redirect('add_funcionario')
+    if request.method == "POST":
+        dados = request.POST.dict()
+        if "cpf" in dados and "senha" in dados:
+            cpf = dados.get("cpf")
+            senha = dados.get("senha")
+            usuario = authenticate(request, username=cpf, password=senha)
+            if usuario.funcionario.ativo:
+                if usuario:
+                    login(request, usuario)
+                    print("logado")
+                    return redirect('add_funcionario')
+                else:
+                    mensagem= "Credenciais"
+        else:
+            mensagem = "Erro"
+
+    context = {"mensagem": mensagem}
+    return render(request, 'stock/pages/fazer_login.html', context)
+
+@login_required
+def fazer_logout(request):
+    logout(request)
+    return redirect("fazer_login")

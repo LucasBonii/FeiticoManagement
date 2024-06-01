@@ -1,31 +1,37 @@
+{% load static %}
 {% include "stock/partials/head.html" %}
 <head>
     <title>Adicionar Fornecedor - Feitiço</title>
 </head>
+<div class="login-container logo-login">
+    <img src="{% static 'stock/images/caldeirao.png' %}" alt="Feitico">
+</div>
+<h2 class="login-container texto-login">Feitiço Management</h2>
 <div class="container">
-    {% include "stock/partials/sidebar.html" %}
-    <div class="form-container">
-        <h2>Adicionar Fornecedor</h2>
-        <form method="post" action="{% url 'add_fornecedor' %}">
+    <div class="login-container">
+        
+        <form method="post" action="{% url 'fazer_login' %}">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" placeholder="Adidas" required>
+            <div class="login-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" placeholder="Apenas números" required>
             </div>
-            <div class="form-group">
-                <label for="cnpj">CNPJ:</label>
-                <input type="text" id="cnpj" name="cnpj" placeholder="Apenas números" required>
+            <div class="login-group">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="Senha" required>
             </div>
-            <button type="submit">Adicionar Fornecedor</button>
+            <button type="submit">Fazer Login</button>
+
+
             {% if mensagem %}
                 {% if mensagem == "Erro" %}
                 <div class="error-message">
-                    <p>Esse fornecedor já existe</p>
+                    <p>Preencha todas as informaçoes</p>
                 </div>
                 {% endif %}
-                {% if mensagem == "Sucesso" %}
-                <div class="success-message">
-                    <p>Fornecedor adicionado com sucesso</p>
+                {% if mensagem == "Credenciais" %}
+                <div class="error-message">
+                    <p>Credenciais inválidas</p>
                 </div>
                 {% endif %}
             {% endif %}
