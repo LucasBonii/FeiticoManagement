@@ -1,11 +1,14 @@
-<head>
-    {% include "stock/partials/head.html" %}
-    {% block head %}{% endblock head %}
-</head>
+{% include "stock/partials/head.html" %}
 
-<body>
+<div class="container"></div>
     {% include "stock/partials/sidebar.html" %}
-    
-    {% block content %}{% endblock content %}
-</body>
+    <div class="form-container">
+        {% for venda in vendas %}
+        <div class="form-group">
+            <p>{{ venda.valor_total }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 

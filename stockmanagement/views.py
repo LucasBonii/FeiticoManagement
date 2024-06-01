@@ -8,7 +8,9 @@ from .utils import *
 # Create your views here.
 
 def home(request):
-    return render(request, 'stock/pages/home.html')
+    vendas = Venda.objects.filter(finalizada=True).order_by("-horario")[:5]
+    context = {"vendas": vendas}
+    return render(request, 'stock/pages/home.html', context)
 
 
 @login_required
