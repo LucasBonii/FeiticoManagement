@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 class Cargo(models.Model):
     cargo = models.CharField(max_length=11, unique=True)
 
+    def __str__(self):
+        return self.cargo
 
 class Funcionario(models.Model):
     cpf = models.CharField(max_length=11, unique=True)  

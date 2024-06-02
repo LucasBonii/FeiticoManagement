@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import Group
 from .models import *
 from datetime import datetime
 from .utils import *
 
 # Create your views here.
-
+@login_required
 def home(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     vendas = Venda.objects.filter(finalizada=True).order_by("-horario")[:5]
     context = {"vendas": vendas}
     return render(request, 'stock/pages/home.html', context)
@@ -15,6 +20,10 @@ def home(request):
 
 @login_required
 def add_fornecedor(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     mensagem = None
     if request.method == "POST":            #Se o formulário for preenchido
         dados = request.POST.dict()
@@ -33,6 +42,10 @@ def add_fornecedor(request):
 
 @login_required
 def add_produto(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     mensagem = None
     if request.method == "POST":            #Se o formulário for preenchido
         dados = request.POST.dict()
@@ -59,6 +72,10 @@ def add_produto(request):
 
 @login_required
 def add_estoque(request, id_produto=None):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     mensagem = None
     selecionado = False
     produto_selecionado = None
@@ -92,6 +109,10 @@ def add_estoque(request, id_produto=None):
 
 @login_required
 def add_cliente(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     mensagem = None
     if request.method == "POST":
         dados = request.POST.dict()
@@ -112,6 +133,10 @@ def add_cliente(request):
 
 @login_required
 def add_funcionario(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     mensagem = None
     cargos = Cargo.objects.all()
 
@@ -136,6 +161,10 @@ def add_funcionario(request):
                     funcao=cargo,
                     usuario=usuario
                 )
+                criar_usuario_postgre(nome, senha, cargo.cargo)
+                grupo = Group.objects.get(name=cargo.cargo)  # Obtenha o grupo desejado pelo nome
+                usuario.groups.add(grupo)
+                usuario.save()
                 mensagem = "Sucesso"
             else:
                 mensagem = "Erro"
@@ -171,10 +200,14 @@ def fazer_login(request):
     context = {"mensagem": mensagem}
     return render(request, 'stock/pages/fazer_login.html', context)
 
+
 @login_required
 def add_venda(request):
     itens_venda = None
-    vendedor = request.user.funcionario
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
     venda.valor_total = calcular_preco_total(venda)
     itens_venda = ItensPedido.objects.filter(pedido=venda)
@@ -215,6 +248,7 @@ def add_venda(request):
     return render(request, 'stock/pages/add_venda.html', context)
     
 
+@login_required
 def finalizar_venda(request):
     vendedor = request.user.funcionario
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
@@ -226,12 +260,41 @@ def finalizar_venda(request):
         venda.save()
     return redirect('add_venda')
 
-
+@login_required
 def cancelar_venda(request):
+    try:
+        vendedor = request.user.funcionario
+    except:
+        return redirect('completar_cadastro')
     vendedor = request.user.funcionario
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
     venda.delete()
     return redirect('add_venda')
+
+@login_required
+def completar_cadastro(request):
+    usuario = request.user
+    if request.method == "POST":
+        dados = request.POST.dict()
+        nome = dados.get("nome")
+        cpf = dados.get("cpf")
+        telefone = dados.get("telefone")
+        senha = dados.get("senha")
+        print('chegou')
+        confirma_senha = authenticate(request, username=usuario.username, password=senha)
+        print('passou')
+        funcionario, criado = Funcionario.objects.get_or_create(cpf=cpf)
+        if not criado:
+            return redirect('completar_cadastro')
+        elif criado and confirma_senha:
+            funcionario.usuario = usuario
+            funcionario.nome = nome
+            funcionario.telefone = telefone
+            criar_usuario_postgre(nome, senha, 'gerente')
+            funcionario.save()
+            return redirect('home')
+
+    return render(request, 'stock/pages/completar_cadastro.html')
 
 @login_required
 def fazer_logout(request):

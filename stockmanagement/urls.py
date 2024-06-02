@@ -14,4 +14,5 @@ urlpatterns = [
     path('finalizar_venda/', views.finalizar_venda, name="finalizar_venda"),
     path('cancelar_venda/', views.cancelar_venda, name="cancelar_venda"),
     path('logout/', views.fazer_logout, name='fazer_logout'),
+    path('completarcadastro/', views.completar_cadastro, name='completar_cadastro'),
 ]

@@ -1,0 +1,49 @@
+{% load static %}
+{% include "stock/partials/head.html" %}
+<head>
+    <title>Adicionar Fornecedor - Feitiço</title>
+</head>
+<div class="login-container logo-login">
+    <img src="{% static 'stock/images/caldeirao.png' %}" alt="Feitico">
+</div>
+<h2 class="login-container texto-login">Feitiço Management</h2>
+<div class="container">
+    <div class="login-container">
+        
+        <form method="post" action="{% url 'completar_cadastro' %}">
+            {% csrf_token %}
+            <div class="login-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" placeholder="Insira seu nome" required>
+            </div>
+            <div class="login-group">
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone" placeholder="Apenas números" required>
+            </div>
+            <div class="login-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" placeholder="Apenas números" required>
+            </div>
+            <div class="login-group">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="Insira sua senha novamente" required>
+            </div>
+            <button type="submit">Completar Cadastro</button>
+
+
+            {% if mensagem %}
+                {% if mensagem == "Erro" %}
+                <div class="error-message">
+                    <p>Preencha todas as informaçoes</p>
+                </div>
+                {% endif %}
+                {% if mensagem == "Credenciais" %}
+                <div class="error-message">
+                    <p>Credenciais inválidas</p>
+                </div>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+</div>
+
