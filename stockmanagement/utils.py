@@ -69,7 +69,6 @@ def criar_usuario_postgre(nome, senha, cargo):
         print(f"Erro ao criar usuário: {e}")
 
 
-
 def exportar_csv(informacoes):
     colunas = informacoes.model._meta.fields
     nome_colunas = [coluna.name for coluna in colunas]
@@ -83,3 +82,14 @@ def exportar_csv(informacoes):
         creator.writerow(linha)
 
     return resposta
+
+
+def is_gerente_ou_vendedor(user):
+    return user.groups.filter(name__in=['Gerente', 'Vendedor']).exists()
+
+def is_gerente_ou_estoquista(user):
+    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
+
+def is_gerente_ou_analista(user):
+    
+    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()

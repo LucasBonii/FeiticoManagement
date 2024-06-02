@@ -1,7 +1,9 @@
 {% load static %}
 <div class="main-side-bar">
     <div class="logo">
-        <img src="{% static 'stock/images/caldeirao.png' %}" alt="Feitico">
+        <a href="{% url "home" %}">
+            <img src="{% static 'stock/images/caldeirao.png' %}" alt="Feitico">
+        </a>
     </div>
     <div class="nav-buttons">
         <a href="{% url "add_venda" %}"><i class="fa-solid fa-dollar-sign"></i>  Venda</a>

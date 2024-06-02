@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
 from django.db.models import Sum
@@ -7,7 +7,7 @@ from .models import *
 from datetime import datetime
 from .utils import *
 
-# Create your views here.
+
 @login_required
 def home(request):
     try:
@@ -25,6 +25,7 @@ def home(request):
 
 
 @login_required
+@user_passes_test(is_gerente_ou_estoquista,  login_url='/home/')
 def add_fornecedor(request):
     try:
         vendedor = request.user.funcionario
@@ -47,6 +48,7 @@ def add_fornecedor(request):
 
 
 @login_required
+@user_passes_test(is_gerente_ou_estoquista,  login_url='/home/')
 def add_produto(request):
     try:
         vendedor = request.user.funcionario
@@ -77,6 +79,7 @@ def add_produto(request):
 
 
 @login_required
+@user_passes_test(is_gerente_ou_estoquista,  login_url='/home/')
 def add_estoque(request, id_produto=None):
     try:
         vendedor = request.user.funcionario
@@ -113,6 +116,7 @@ def add_estoque(request, id_produto=None):
 
 
 @login_required
+@user_passes_test(is_gerente_ou_vendedor,  login_url='/home/')
 def add_cliente(request):
     try:
         vendedor = request.user.funcionario
@@ -137,6 +141,7 @@ def add_cliente(request):
 
 
 @login_required
+@user_passes_test(lambda user: user.groups.filter(name='Gerente').exists(),  login_url='/home/')
 def add_funcionario(request):
     try:
         vendedor = request.user.funcionario
@@ -181,7 +186,7 @@ def add_funcionario(request):
     return render(request, 'stock/pages/add_funcionario.html', context)
 
 
-def fazer_login(request):
+def fazer_login(request, login_url='/home/'):
     mensagem = None
     if request.user.is_authenticated:
 
@@ -196,7 +201,7 @@ def fazer_login(request):
                 if usuario:
                     login(request, usuario)
 
-                    return redirect('add_funcionario')
+                    return redirect('home')
                 else:
                     mensagem= "Credenciais"
         else:
@@ -207,6 +212,7 @@ def fazer_login(request):
 
 
 @login_required
+@user_passes_test(is_gerente_ou_vendedor,  login_url='/home/')
 def add_venda(request):
     itens_venda = None
     try:
@@ -255,6 +261,7 @@ def add_venda(request):
     
 
 @login_required
+@user_passes_test(is_gerente_ou_vendedor,  login_url='/home/')
 def finalizar_venda(request):
     vendedor = request.user.funcionario
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
@@ -267,6 +274,7 @@ def finalizar_venda(request):
     return redirect('add_venda')
 
 @login_required
+@user_passes_test(is_gerente_ou_vendedor,  login_url='/home/')
 def cancelar_venda(request):
     try:
         vendedor = request.user.funcionario
@@ -276,6 +284,7 @@ def cancelar_venda(request):
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
     venda.delete()
     return redirect('add_venda')
+
 
 @login_required
 def completar_cadastro(request):
@@ -308,6 +317,7 @@ def fazer_logout(request):
     return redirect("fazer_login")
 
 @login_required
+@user_passes_test(is_gerente_ou_analista, login_url='/home/')
 def exportar_relatorio(request, relatorio):
     if relatorio == "venda":
         informacoes = Venda.objects.filter(finalizada=True)
