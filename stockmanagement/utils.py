@@ -14,6 +14,7 @@ def calcular_preco_total(venda):
     total = 0
     itens_venda = ItensPedido.objects.filter(pedido=venda)
     total = sum([item.preco_parcial for item in itens_venda])
+    print(total)
     return total
 
 

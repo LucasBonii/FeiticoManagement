@@ -83,7 +83,6 @@ def add_estoque(request, id_produto=None):
     if id_produto:  # Se o ID do produto estiver presente na URL
         produto_selecionado = Produto.objects.filter(id=id_produto).first()
         quantidade = request.POST.get("quantidade")
-        print(quantidade)
         if quantidade:
             try:
                 quantidade = int(quantidade)
@@ -179,7 +178,7 @@ def add_funcionario(request):
 def fazer_login(request):
     mensagem = None
     if request.user.is_authenticated:
-        print(request.user)
+
         return redirect('add_funcionario')
     if request.method == "POST":
         dados = request.POST.dict()
@@ -190,7 +189,7 @@ def fazer_login(request):
             if usuario.funcionario.ativo:
                 if usuario:
                     login(request, usuario)
-                    print("logado")
+
                     return redirect('add_funcionario')
                 else:
                     mensagem= "Credenciais"
@@ -210,6 +209,7 @@ def add_venda(request):
         return redirect('completar_cadastro')
     venda, criado = Venda.objects.get_or_create(funcionario=vendedor, finalizada=False)
     venda.valor_total = calcular_preco_total(venda)
+    venda.save()
     itens_venda = ItensPedido.objects.filter(pedido=venda)
     cliente = venda.cliente
     if request.method == "POST":
@@ -280,9 +280,9 @@ def completar_cadastro(request):
         cpf = dados.get("cpf")
         telefone = dados.get("telefone")
         senha = dados.get("senha")
-        print('chegou')
+        
         confirma_senha = authenticate(request, username=usuario.username, password=senha)
-        print('passou')
+        
         funcionario, criado = Funcionario.objects.get_or_create(cpf=cpf)
         if not criado:
             return redirect('completar_cadastro')
