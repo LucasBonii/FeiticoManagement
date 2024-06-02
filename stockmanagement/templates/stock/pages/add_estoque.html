@@ -1,6 +1,6 @@
 {% include "stock/partials/head.html" %}
 <head>
-    <title>Adicionar Fornecedor - Feitiço</title>
+    <title>Editar Estoque - Feitiço</title>
 </head>
 <div class="container">
     {% include "stock/partials/sidebar.html" %}
@@ -19,7 +19,7 @@
                 
             </form>
         {% else %}
-        <h2>Adicionar Estoque</h2>
+        <h2>Editar Estoque</h2>
         <form method="post" action="{% url 'add_estoque' produto.id %}">
             {% csrf_token %}
             <div class="form-group">
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="quantidade">Quantidade:</label>
-                <input type="numeric" id="quantidade" name="quantidade" placeholder="64" required>
+                <input type="numeric" id="quantidade" name="quantidade" placeholder="-10 ou 10" required>
             </div>
 
             <button type="submit">Adicionar Estoque</button>
