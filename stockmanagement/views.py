@@ -96,17 +96,18 @@ def add_estoque(request, id_produto=None):
             try:
                 quantidade = int(quantidade)
                 if produto_selecionado:
-                    produto_selecionado.quantidade += quantidade
-                    produto_selecionado.save()
-                    quantidade = 0
-                    mensagem = "sucesso"
-                    return redirect('add_estoque', id_produto=id_produto)
+                    if (produto_selecionado.quantidade + quantidade) >= 0:
+                        produto_selecionado.quantidade += quantidade
+                        produto_selecionado.save()
+                        quantidade = 0
+                        mensagem = "sucesso"
+                        return redirect('add_estoque', id_produto=id_produto)
                     
             except ValueError:
                 mensagem = "número"
         selecionado = True
 
-    if request.method == "POST" and not id_produto:  # Se o formulário for preenchido e id_produto não está na URL
+    if request.method == "POST" and not id_produto:
         id_produto = request.POST.get("id_produto")
         if id_produto:
             return redirect('add_estoque', id_produto=id_produto)
