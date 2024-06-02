@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
+from django.db.models import Sum
 from .models import *
 from datetime import datetime
 from .utils import *
@@ -13,8 +14,13 @@ def home(request):
         vendedor = request.user.funcionario
     except:
         return redirect('completar_cadastro')
-    vendas = Venda.objects.filter(finalizada=True).order_by("-horario")[:5]
-    context = {"vendas": vendas}
+    vendas = Venda.objects.filter(finalizada=True).order_by("-horario")[:10]
+
+    produtos_top = ItensPedido.objects.values('produto__descricao').annotate(quantidade=Sum('quantidade'), preco_total=Sum('preco_parcial'))
+    produtos_top.order_by('-quantidade')[:10]
+
+    print(produtos_top)
+    context = {"vendas": vendas, "produtos": produtos_top}
     return render(request, 'stock/pages/home.html', context)
 
 
@@ -300,3 +306,15 @@ def completar_cadastro(request):
 def fazer_logout(request):
     logout(request)
     return redirect("fazer_login")
+
+@login_required
+def exportar_relatorio(request, relatorio):
+    if relatorio == "venda":
+        informacoes = Venda.objects.filter(finalizada=True)
+    elif relatorio == "cliente":
+        informacoes = Cliente.objects.all()
+    elif relatorio == "funcionario":
+        informacoes = Funcionario.objects.all()
+    elif relatorio == "itens":
+        informacoes = ItensPedido.objects.filter(pedido__finalizada=True)
+    return exportar_csv(informacoes)

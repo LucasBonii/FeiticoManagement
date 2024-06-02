@@ -15,4 +15,5 @@ urlpatterns = [
     path('cancelar_venda/', views.cancelar_venda, name="cancelar_venda"),
     path('logout/', views.fazer_logout, name='fazer_logout'),
     path('completarcadastro/', views.completar_cadastro, name='completar_cadastro'),
+    path('exportar_relatorio/<str:relatorio>', views.exportar_relatorio, name="exportar_relatorio"),
 ]

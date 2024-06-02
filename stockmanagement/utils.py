@@ -2,6 +2,8 @@ from .models import *
 import psycopg2
 from psycopg2 import sql
 from django.conf import settings
+import csv
+from django.http import HttpResponse
 
 
 
@@ -66,3 +68,18 @@ def criar_usuario_postgre(nome, senha, cargo):
     except Exception as e:
         print(f"Erro ao criar usuário: {e}")
 
+
+
+def exportar_csv(informacoes):
+    colunas = informacoes.model._meta.fields
+    nome_colunas = [coluna.name for coluna in colunas]
+    print(nome_colunas)
+    resposta = HttpResponse(content_type="text/csv")
+    resposta["Content-Disposition"] = f"attachment; filename={informacoes.model._meta.db_table}.csv"
+
+    creator = csv.writer(resposta, delimiter=";")
+    creator.writerow(nome_colunas)
+    for linha in informacoes.values_list():
+        creator.writerow(linha)
+
+    return resposta
