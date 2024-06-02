@@ -174,6 +174,8 @@ def add_funcionario(request):
                 criar_usuario_postgre(nome, senha, cargo.cargo)
                 grupo = Group.objects.get(name=cargo.cargo)  # Obtenha o grupo desejado pelo nome
                 usuario.groups.add(grupo)
+                if cargo.cargo == 'Gerente':
+                    usuario.is_staff = True
                 usuario.save()
                 mensagem = "Sucesso"
             else:

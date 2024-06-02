@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Cargo(models.Model):
-    cargo = models.CharField(max_length=11, unique=True)
+    cargo = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return self.cargo
@@ -23,7 +23,7 @@ class Funcionario(models.Model):
     
 
 class Fornecedor(models.Model):
-    cnpj = models.BigIntegerField(default=0)
+    cnpj = models.CharField(max_length=18, unique=True) 
     nome_fornecedor = models.CharField(max_length=45)
 
     def __str__(self):
@@ -44,9 +44,11 @@ class Produto(models.Model):
 
 class Cliente(models.Model):
     nome = models.CharField(max_length=60)
-    cpf = models.BigIntegerField()
-    telefone = models.BigIntegerField()
+    cpf = models.CharField(max_length=11, unique=True) 
+    telefone = models.CharField(max_length=20, blank=True) 
 
+    def __str__(self):
+        return self.nome
 
 class Venda(models.Model): 
     horario = models.DateTimeField(blank=True, null=True)  
