@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'feitico.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'feiticomanagement',
         'USER': 'admin',
         'PASSWORD': 'Kfa3AzkNx5dMuh2aSXmyY35GlAz67y36',
