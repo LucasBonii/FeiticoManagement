@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-n1sh=nz714i)-rfk3e!3@u4uc+=hdxheac75+es7)!@ka&#8d-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['feiticomanagement.onrender.com']
 
 
 # Application definition
