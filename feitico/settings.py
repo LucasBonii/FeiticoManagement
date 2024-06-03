@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'feitico.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stockmanagement',
-        'USER': 'postgres',
-        'PASSWORD': 'cacau123',
-        'HOST': 'localhost',
+        'NAME': 'feiticomanagement',
+        'USER': 'admin',
+        'PASSWORD': 'Kfa3AzkNx5dMuh2aSXmyY35GlAz67y36',
+        'HOST': 'dpg-cpf0n5dds78s739477dg-a.oregon-postgres.render.com',
         'PORT': '5432',
     }
 }
