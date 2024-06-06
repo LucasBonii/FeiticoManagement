@@ -192,7 +192,6 @@ def add_funcionario(request):
 def fazer_login(request, login_url='/home/'):
     mensagem = None
     if request.user.is_authenticated:
-
         return redirect('add_funcionario')
     if request.method == "POST":
         dados = request.POST.dict()
@@ -200,13 +199,16 @@ def fazer_login(request, login_url='/home/'):
             cpf = dados.get("cpf")
             senha = dados.get("senha")
             usuario = authenticate(request, username=cpf, password=senha)
-            if usuario.funcionario.ativo:
+            login(request, usuario)
+            try:
                 if usuario:
-                    login(request, usuario)
-
-                    return redirect('home')
-                else:
-                    mensagem= "Credenciais"
+                    if usuario.funcionario.ativo:
+                        return redirect('home')
+                    else:
+                        mensagem= "Credenciais"
+                        return redirect('fazer_logout')
+            except:
+                return redirect('completar_cadastro')
         else:
             mensagem = "Erro"
 
@@ -289,7 +291,7 @@ def cancelar_venda(request):
     return redirect('add_venda')
 
 
-@login_required
+
 def completar_cadastro(request):
     usuario = request.user
     if request.method == "POST":
@@ -310,6 +312,7 @@ def completar_cadastro(request):
             funcionario.telefone = telefone
             criar_usuario_postgre(nome, senha, 'gerente')
             funcionario.save()
+            login(request, usuario)
             return redirect('home')
 
     return render(request, 'stock/pages/completar_cadastro.html')
