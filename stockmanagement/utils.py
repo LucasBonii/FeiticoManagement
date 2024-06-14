@@ -1,9 +1,11 @@
-from .models import *
+from stockmanagement .models import *
 import psycopg2
 from psycopg2 import sql
 from django.conf import settings
 import csv
 from django.http import HttpResponse
+from django.shortcuts import redirect
+
 
 
 
@@ -84,6 +86,26 @@ def exportar_csv(informacoes):
     return resposta
 
 
+def fazer_login_postgre(request, username, password):
+    try:
+        # Tenta conectar ao PostgreSQL com as credenciais fornecidas
+        conn = psycopg2.connect(
+            dbname='feiticomanagement',
+            user=username,
+            password=password,
+            host='dpg-cpf0n5dds78s739477dg-a.oregon-postgres.render.com',
+            port='5432'
+        )
+        conn.close()  # Se a conexão for bem-sucedida, as credenciais estão corretas
+        
+        # Criar uma sessão para o usuário
+        request.session['postgres_user'] = username
+        return redirect('home')
+    except:
+        return redirect('fazer_login')
+
+
+
 def is_gerente_ou_vendedor(user):
     return user.groups.filter(name__in=['Gerente', 'Vendedor']).exists()
 
@@ -91,5 +113,17 @@ def is_gerente_ou_estoquista(user):
     return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
 
 def is_gerente_ou_analista(user):
-    
     return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
+
+
+
+def verificar_cadastro(request):
+    try:
+        username = request.session['postgres_user']
+    except:
+        return redirect('fazer_login')
+    usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
+    if not usuario:
+        return redirect('completar_cadastro')
+
+    
