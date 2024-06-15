@@ -33,6 +33,7 @@ def verificar_quantidades(venda):
 
 def diminuir_estoque(venda):
     itens_pedido = ItensPedido.objects.filter(pedido=venda)
+    verificar_quantidades(venda)
     for item in itens_pedido:
         item.produto.quantidade -= item.quantidade
         item.save()
@@ -106,14 +107,22 @@ def fazer_login_postgre(request, username, password):
 
 
 
-def is_gerente_ou_vendedor(user):
-    return user.groups.filter(name__in=['Gerente', 'Vendedor']).exists()
-
-def is_gerente_ou_estoquista(user):
-    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
-
-def is_gerente_ou_analista(user):
-    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
+def require_access_level(level):
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            try:
+                usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
+                print(usuario)
+                if usuario.funcao in level:
+                    print('olá')
+                    return view_func(request, *args, **kwargs)
+                else:
+                    return redirect('home')
+            except:
+                return redirect('completar_cadastro')
+             
+        return _wrapped_view
+    return decorator
 
 
 

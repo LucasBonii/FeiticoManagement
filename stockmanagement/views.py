@@ -26,7 +26,7 @@ def home(request):
     return render(request, 'stock/pages/home.html', context)
 
 
-
+@require_access_level(['Gerente', 'Estoquista'])
 def add_fornecedor(request):
     mensagem = None
     usuario = None
@@ -50,7 +50,7 @@ def add_fornecedor(request):
     return render(request, 'stock/pages/add_fornecedor.html', context)
 
 
-
+@require_access_level(['Gerente', 'Estoquista'])
 def add_produto(request):
     mensagem = None
     usuario = None
@@ -82,6 +82,7 @@ def add_produto(request):
     return render(request, 'stock/pages/add_produto.html', context)
 
 
+@require_access_level(['Gerente', 'Estoquista'])
 def add_estoque(request, id_produto=None):
     mensagem = None
     selecionado = False
@@ -119,7 +120,7 @@ def add_estoque(request, id_produto=None):
     return render(request, 'stock/pages/add_estoque.html', context)
 
 
-
+@require_access_level(['Gerente', 'Vendedor'])
 def add_cliente(request):
     mensagem = None
     usuario = None
@@ -144,7 +145,7 @@ def add_cliente(request):
     return render(request, 'stock/pages/add_cliente.html', context)
 
 
-
+@require_access_level(['Gerente'])
 def add_funcionario(request):
     mensagem = None
     usuario = None
@@ -187,8 +188,7 @@ def add_funcionario(request):
 
 
 
-
-
+@require_access_level(['Gerente', 'Vendedor'])
 def add_venda(request):
     itens_venda = None
     usuario = None
@@ -239,6 +239,7 @@ def add_venda(request):
     
 
 
+@require_access_level(['Gerente', 'Vendedor'])
 def finalizar_venda(request):
     usuario = None
     verificar_cadastro(request)
@@ -256,6 +257,7 @@ def finalizar_venda(request):
     return redirect('add_venda')
 
 
+@require_access_level(['Gerente', 'Vendedor'])
 def cancelar_venda(request):
     usuario = None
     verificar_cadastro(request)
@@ -311,9 +313,13 @@ def fazer_login(request):
     return render(request, 'stock/pages/fazer_login.html')
 
 
-@login_required
-@user_passes_test(is_gerente_ou_analista, login_url='/home/')
+@require_access_level(['Gerente', 'Analista'])
 def exportar_relatorio(request, relatorio):
+    usuario = None
+    verificar_cadastro(request)
+    usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
+    if not usuario:
+        return redirect('completar_cadastro')
     if relatorio == "venda":
         informacoes = Venda.objects.filter(finalizada=True)
     elif relatorio == "cliente":
