@@ -61,9 +61,9 @@ def criar_usuario_postgre(nome, senha, cargo):
         nome = nome.replace(" ", "")
         nome = nome.lower()
         cur.execute(sql.SQL("CREATE USER {} WITH PASSWORD %s").format(sql.Identifier(nome)), [senha])
-        print("foi")
+        
         cur.execute(sql.SQL("GRANT {} TO {}").format(sql.Identifier(cargo), sql.Identifier(nome)))
-        print("foi")
+        
 
 
         cur.close()
@@ -75,7 +75,7 @@ def criar_usuario_postgre(nome, senha, cargo):
 def exportar_csv(informacoes):
     colunas = informacoes.model._meta.fields
     nome_colunas = [coluna.name for coluna in colunas]
-    print(nome_colunas)
+    
     resposta = HttpResponse(content_type="text/csv")
     resposta["Content-Disposition"] = f"attachment; filename={informacoes.model._meta.db_table}.csv"
 
@@ -112,9 +112,8 @@ def require_access_level(level):
         def _wrapped_view(request, *args, **kwargs):
             try:
                 usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
-                print(usuario)
-                if usuario.funcao in level:
-                    print('olá')
+
+                if str(usuario.funcao) in level:
                     return view_func(request, *args, **kwargs)
                 else:
                     return redirect('home')

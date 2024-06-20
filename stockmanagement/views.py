@@ -21,7 +21,6 @@ def home(request):
     produtos_top = ItensPedido.objects.values('produto__descricao').annotate(quantidade=Sum('quantidade'), preco_total=Sum('preco_parcial'))
     produtos_top.order_by('-quantidade')[:10]
 
-    print(usuario.cpf)
     context = {"vendas": vendas, "produtos": produtos_top}
     return render(request, 'stock/pages/home.html', context)
 
