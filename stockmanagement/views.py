@@ -18,9 +18,7 @@ def home(request):
     
     vendas = Venda.objects.filter(finalizada=True).order_by("-horario")[:10]
 
-    produtos_top = ItensPedido.objects.values('produto__descricao').annotate(quantidade=Sum('quantidade'), preco_total=Sum('preco_parcial'))
-    produtos_top.order_by('-quantidade')[:10]
-
+    produtos_top = ItensPedido.objects.values('produto__descricao').annotate(quantidade=Sum('quantidade'), preco_total=Sum('preco_parcial')).order_by('-quantidade')[:10]
     context = {"vendas": vendas, "produtos": produtos_top}
     return render(request, 'stock/pages/home.html', context)
 
