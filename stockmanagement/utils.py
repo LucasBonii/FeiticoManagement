@@ -92,7 +92,7 @@ def fazer_login_postgre(request, username, password):
         # Tenta conectar ao PostgreSQL com as credenciais fornecidas
         conn = psycopg2.connect(
             dbname='feiticomanagement',
-            user=username,
+            user=username,  
             password=password,
             host='dpg-cpf0n5dds78s739477dg-a.oregon-postgres.render.com',
             port='5432'

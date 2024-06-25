@@ -68,7 +68,7 @@ def add_produto(request):
         
         fornecedor = Fornecedor.objects.filter(id=fornecedor).first()
         if fornecedor:
-            produto = Produto.objects.filter(fornecedor=fornecedor, descricao=descricao).first()
+            produto = Produto.objects.filter(fornecedor=fornecedor, descricao=descricao, tamanho=tamanho, cor=cor).first()
             if produto:
                 mensagem = "Erro produto"
             else:
