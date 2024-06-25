@@ -1,9 +1,11 @@
-from .models import *
+from stockmanagement .models import *
 import psycopg2
 from psycopg2 import sql
 from django.conf import settings
 import csv
 from django.http import HttpResponse
+from django.shortcuts import redirect
+
 
 
 
@@ -31,6 +33,7 @@ def verificar_quantidades(venda):
 
 def diminuir_estoque(venda):
     itens_pedido = ItensPedido.objects.filter(pedido=venda)
+    verificar_quantidades(venda)
     for item in itens_pedido:
         item.produto.quantidade -= item.quantidade
         item.save()
@@ -58,9 +61,9 @@ def criar_usuario_postgre(nome, senha, cargo):
         nome = nome.replace(" ", "")
         nome = nome.lower()
         cur.execute(sql.SQL("CREATE USER {} WITH PASSWORD %s").format(sql.Identifier(nome)), [senha])
-        print("foi")
+        
         cur.execute(sql.SQL("GRANT {} TO {}").format(sql.Identifier(cargo), sql.Identifier(nome)))
-        print("foi")
+        
 
 
         cur.close()
@@ -72,7 +75,7 @@ def criar_usuario_postgre(nome, senha, cargo):
 def exportar_csv(informacoes):
     colunas = informacoes.model._meta.fields
     nome_colunas = [coluna.name for coluna in colunas]
-    print(nome_colunas)
+    
     resposta = HttpResponse(content_type="text/csv")
     resposta["Content-Disposition"] = f"attachment; filename={informacoes.model._meta.db_table}.csv"
 
@@ -84,12 +87,51 @@ def exportar_csv(informacoes):
     return resposta
 
 
-def is_gerente_ou_vendedor(user):
-    return user.groups.filter(name__in=['Gerente', 'Vendedor']).exists()
+def fazer_login_postgre(request, username, password):
+    try:
+        # Tenta conectar ao PostgreSQL com as credenciais fornecidas
+        conn = psycopg2.connect(
+            dbname='feiticomanagement',
+            user=username,  
+            password=password,
+            host='dpg-cpf0n5dds78s739477dg-a.oregon-postgres.render.com',
+            port='5432'
+        )
+        conn.close()  # Se a conexão for bem-sucedida, as credenciais estão corretas
+        
+        # Criar uma sessão para o usuário
+        request.session['postgres_user'] = username
+        return redirect('home')
+    except:
+        return redirect('fazer_login')
 
-def is_gerente_ou_estoquista(user):
-    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
 
-def is_gerente_ou_analista(user):
+
+def require_access_level(level):
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            try:
+                usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
+
+                if str(usuario.funcao) in level:
+                    return view_func(request, *args, **kwargs)
+                else:
+                    return redirect('home')
+            except:
+                return redirect('completar_cadastro')
+             
+        return _wrapped_view
+    return decorator
+
+
+
+def verificar_cadastro(request):
+    try:
+        username = request.session['postgres_user']
+    except:
+        return redirect('fazer_login')
+    usuario = Funcionario.objects.get(usuario=request.session['postgres_user'])
+    if not usuario:
+        return redirect('completar_cadastro')
+
     
-    return user.groups.filter(name__in=['Gerente', 'Estoquista']).exists()
